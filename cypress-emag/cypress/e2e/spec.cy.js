@@ -5,7 +5,7 @@ describe('template spec', () => {
         // Assert the response status
         expect(response.status).to.eq(200);
 
-        // Assert the response body
+        // Assert the response body for users
         const users = response.body.users;
         cy.log(JSON.stringify(users));
 
@@ -41,7 +41,7 @@ describe('template spec', () => {
   it('Should return 301 for the redirect endpoint', () => {
     cy.request({
       url: 'http://localhost:3000/redirect',
-      followRedirect: false 
+      followRedirect: false
     }).then((response) => {
       // Assert the response status
       expect(response.status).to.eq(301);
@@ -60,11 +60,31 @@ describe('template spec', () => {
         expect(response.status).to.eq(201);
 
         // Assert the response body
+        const responseBody = response.body;
+        cy.log(JSON.stringify(responseBody));
+
+        // Assert the response body for users
         const users = response.body.users;
         cy.log(JSON.stringify(users));
 
         // Check that the response includes the new user object
         expect(users).to.deep.include(newUser);
+        expect(responseBody).to.have.property('message', 'User added successfully');
+      });
+  });
+
+  it('Add invalid user to the list', () => {
+    let invalidUser = { id: 100 }
+
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:3000/users',
+      body: invalidUser,
+      failOnStatusCode: false // Prevent Cypress from failing the test on non-2xx status codes
+    })
+      .then((response) => {
+        // Assert the response status
+        expect(response.status).to.eq(400);
       });
   });
 });

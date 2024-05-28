@@ -24,7 +24,6 @@ router.get('/redirect', function (req, res, next) {
 router.post('/users', function (req, res, next) {
   try {
     const newUser = req.body;
-    console.log('New User:', newUser); // Log the new user data
 
     if (newUser && newUser.id && newUser.name) {
       users.push(newUser);
@@ -37,7 +36,6 @@ router.post('/users', function (req, res, next) {
       res.status(400).json({ error: 'Invalid user data' });
     }
   } catch (error) {
-    console.error('Error adding user:', error); // Log the error
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
